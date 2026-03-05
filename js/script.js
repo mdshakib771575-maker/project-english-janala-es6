@@ -4,18 +4,62 @@ function loadData(){
     .then(res => res.json()) //promise of jsen data .
     .then(json => displayLesson(json.data) )
 }
-// loadData()
 
+const removeActive = ()=>{
+  const lessonsBtn = document.querySelectorAll('.lesson-btn')
+  lessonsBtn.forEach((btn)=>btn.classList.remove('active'))
+}
+// loadData()
 const loadLevelWord = (id)=>{
-console.log(id);
+// console.log(id);
  fetch(`https://openapi.programming-hero.com/api/level/${id}`)
  .then(res => res.json())
- .then(json => displaylavalword(json.data));
+ .then(json => {
+  removeActive();
+  const clickBtn = document.getElementById(`lesson-btn-${id}`)
+  // console.log(clickBtn);
+  clickBtn.classList.add('active')
+  displaylavalword(json.data)
+ });
 }
 
 const displaylavalword = (words)=>{
-    const wordContainer = document.getElementById('word-container')
-console.log(words)
+
+         const wordContainer = document.getElementById('word-container')
+         wordContainer.innerHTML ="";
+         console.log(words.length)
+         if(words.length == 0){
+           wordContainer.innerHTML = `
+           
+             <div class="text-center col-span-full bangla space-y-2">
+               <img src="./images/alert-error.png" alt="" class="mx-auto">
+              
+             <h2 class="text-[12px]">এই Lesson এ এখনো কোন Vocabulary যুক্ত করা হয়নি।</h2>
+        <p class="text-[34px]">নেক্সট Lesson এ যান</p>
+      </div>
+           `
+         }
+         
+         words.forEach(word => {
+            // console.log(word)
+            const createDiv = document.createElement('div')
+            createDiv.innerHTML =  `
+            <div class="bg-white rounded-xl shadow-sm text-center py-10 px-5 h-full space-y-4 ">
+        <h2 class="font-semibold  text-xl" >${word.word}</h2>
+        <p class="font-semibold">Meaning /Pronounciation </p>
+        <p class="bangla text-2xl font-medium">${word.meaning ?word.meaning :'শব্দ পাওয়া যায়নি'} / ${word.pronunciation ? word.pronunciation:'শব্দ পাওয়া যায়নি'}</p>
+        <div class="flex justify-between items-center">
+          <button class="btn bg-[#1A91FF10] hover:bg-[#1A91FF80]"><i class="fa-solid fa-circle-info"></i></button>
+          <button class="btn bg-[#1A91FF10] hover:bg-[#1A91FF80]"><i class="fa-solid fa-volume-high"></i></button>
+
+        </div>
+      </div>  
+            `
+            wordContainer.appendChild(createDiv)
+         });
+        
+        
+     
 }
 
 
@@ -28,10 +72,10 @@ const displayLesson = (lessons)=>{
 const lavelConteiner = document.getElementById('btn-container');
 lavelConteiner.innerHTML="";
 for(let lesson of lessons){
-    console.log(lesson)
+    // console.log(lesson)
     const btnDiv = document.createElement('div');
     btnDiv.innerHTML = `
-    <button onclick="loadLevelWord(${lesson.level_no})" class="btn btn-outline btn-primary"><i class="fa-solid fa-book-open"></i>Learn
+    <button id="lesson-btn-${lesson.level_no}" onclick="loadLevelWord(${lesson.level_no})" class="btn btn-outline btn-primary lesson-btn"><i class="fa-solid fa-book-open"></i>Learn
     ${lesson.level_no}</button>
     `
     lavelConteiner.appendChild(btnDiv)
