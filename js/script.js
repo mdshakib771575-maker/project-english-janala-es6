@@ -1,3 +1,8 @@
+const createElements = (arr)=>{
+// console.log(arr)
+const htmlElements = arr.map((el)=>`<span>${el}</span>`)
+return htmlElements.join();
+}
 function loadData(){
 
     fetch('https://openapi.programming-hero.com/api/levels/all')
@@ -49,7 +54,7 @@ const displaylavalword = (words)=>{
         <p class="font-semibold">Meaning /Pronounciation </p>
         <p class="bangla text-2xl font-medium">${word.meaning ?word.meaning :'শব্দ পাওয়া যায়নি'} / ${word.pronunciation ? word.pronunciation:'শব্দ পাওয়া যায়নি'}</p>
         <div class="flex justify-between items-center">
-          <button class="btn bg-[#1A91FF10] hover:bg-[#1A91FF80]"><i class="fa-solid fa-circle-info"></i></button>
+          <button onclick="loadWordDetale(${word.id})" class="btn bg-[#1A91FF10] hover:bg-[#1A91FF80]"><i class="fa-solid fa-circle-info"></i></button>
           <button class="btn bg-[#1A91FF10] hover:bg-[#1A91FF80]"><i class="fa-solid fa-volume-high"></i></button>
 
         </div>
@@ -61,7 +66,36 @@ const displaylavalword = (words)=>{
         
      
 }
+const loadWordDetale = (id)=>{
+  fetch(`https://openapi.programming-hero.com/api/word/${id}`)
+  .then((res)=>res.json())
+  .then((json)=> displayWordDetales(json.data))
+}
+const displayWordDetales = (datas)=>{
+  console.log(datas)
+  const detailsBox = document.getElementById('details-container');
+  detailsBox.innerHTML = `
+   <div class="">
+        <h2 class="">${datas.word} (<i class="fa-solid fa-microphone-lines"></i> :${datas.pronunciation})</h2>
+     </div>
+      <div class="">
+        <h2 class="font-bold">Meaning</h2>
+        <p>${datas.meaning}</p>
+     </div>
+      <div class="">
+        <h2 class="font-bold">Example</h2>
+        <p>${datas.sentence}</p>
+     </div>
+      <div class="">
+        <h2 class="font-bold">Synonym</h2>
+      <div>
+      ${createElements(datas.synonyms)}
+      </div>
+     </div>
+  `
+  document.getElementById('word_modal').showModal();
 
+}
 
 const displayLesson = (lessons)=>{
 // 1.get the container & emty
