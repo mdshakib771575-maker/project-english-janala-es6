@@ -6,7 +6,7 @@ An interactive English vocabulary learning web application built with **HTML**, 
 
 ## 🚀 Live Demo
 
-🔗 **Live Site:** https://github.com/mdshakib771575-maker/project-english-janala-es6
+🔗 **Live Site:**  https://mdshakib771575-maker.github.io/project-english-janala-es6
 ---
 
 ## 🎨 Figma Design
